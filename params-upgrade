@@ -1,0 +1,26 @@
+# url: https://ci.suse.de/job/openstack-mkcloud/34993/parameters
+
+# Fixed parameters from CI builder
+export cephvolumenumber=1
+export want_neutronsles12=1
+export want_mtu_size=8900
+
+export clusterconfig=data+services+network=2
+
+export cloudsource="develcloud6"
+export mkcloudtarget="all_noreboot"
+export libvirt_type="kvm"
+export networkingplugin="openvswitch"
+export networkingmode="vxlan"
+export storage_method="default"
+export TESTHEAD="1"
+export nodenumber="5"
+export tempestoptions="-t -s"
+export hacloud="1"
+export label="openstack-mkcloud-SLE12-x86_64"
+export vcpus="2"
+
+export upgrade_cloudsource="develcloud7"
+export want_nondisruptiveupgrade="1"
+
+export OWNAUTOMATION="1"
