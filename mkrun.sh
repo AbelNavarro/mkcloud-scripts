@@ -1,7 +1,5 @@
 #!/bin/bash
 
-exec &> >(tee -a "mkcloud.`date +%Y%m%d-%H%M`.log")
-
 if [[ $# -lt 3 ]]; then
     echo "Illegal number of parameters."
     echo "Usage: $0 cloud_slot params_file mkcloud target"
@@ -13,7 +11,7 @@ fi
 #unset qa_crowbarsetup
 unset TESTHEAD
 unset hacloud
-
+unset OWNAUTOMATION
 
 # allocated cloud
 allocated_cloud=$1
@@ -30,6 +28,7 @@ while (( "$#" )); do
 done
 
 export user_keyfile=/root/manual.abel/id_rsa.pub
+exec &> >(tee -a "g${allocated_cloud}/mkcloud.`date +%Y%m%d-%H%M`.log")
 
 
 ###############################
@@ -55,7 +54,7 @@ if test -n "$qa_crowbarsetup"; then
     exit 1
 fi
 
-if test -n "$OWNAUTOMATION"; then
+if test -n "${OWNAUTOMATION:-1}"; then
     echo "Using custom mkcloud and qa_crowbarsetup: yes"
 else
     echo "Using custom mkcloud and qa_crowbarsetup: no"
@@ -103,7 +102,15 @@ fi
 echo
 
 if test -n "$OWNAUTOMATION"; then
-    exec /root/manual.abel/work/automation/scripts/mkcloud $MKCLOUDTARGET
+    pushd /root/manual.abel/automation
+    git pull
+    popd
+
+    pushd /root/manual.abel/g${allocated_cloud}
+    exec /root/manual.abel/automation/scripts/mkcloud $MKCLOUDTARGET
+    popd
 else
-    exec mkcloud $MKCLOUDTARGET
+    echo "OWNAUTOMATION=0 not supported for now"
+    exit 1
+    #exec mkcloud $MKCLOUDTARGET
 fi
