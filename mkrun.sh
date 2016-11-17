@@ -28,7 +28,7 @@ while (( "$#" )); do
 done
 
 export user_keyfile=/root/manual.abel/id_rsa.pub
-exec &> >(tee -a "g${allocated_cloud}/mkcloud.`date +%Y%m%d-%H%M`.log")
+exec &> >(while IFS= read -r line; do echo "$(date +'%Y-%m-%d %H:%M:%S.%N') $line"; done | tee -a "g${allocated_cloud}/mkcloud.`date +%Y%m%d-%H%M`.log")
 
 
 ###############################
